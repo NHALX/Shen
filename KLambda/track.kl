@@ -1,62 +1,62 @@
-(defun shen.f-error (V9654) (do (pr (cn "partial function " (shen.app V9654 ";
-" shen.a)) (stoutput)) (do (if (and (not (shen.tracked? V9654)) (y-or-n? (cn "track " (shen.app V9654 "? " shen.a)))) (shen.track-function (ps V9654)) shen.ok) (simple-error "aborted"))))
+(defun shen.f-error (V9664) (do (pr (cn "partial function " (shen.app V9664 ";
+" shen.a)) (stoutput)) (do (if (and (not (shen.tracked? V9664)) (y-or-n? (cn "track " (shen.app V9664 "? " shen.a)))) (shen.track-function (ps V9664)) shen.ok) (simple-error "aborted"))))
 
-(defun shen.tracked? (V9655) (element? V9655 (value shen.*tracking*)))
+(defun shen.tracked? (V9665) (element? V9665 (value shen.*tracking*)))
 
-(defun track (V9656) (let Source (ps V9656) (shen.track-function Source)))
+(defun track (V9666) (let Source (ps V9666) (shen.track-function Source)))
 
-(defun shen.track-function (V9659) (cond ((and (cons? V9659) (and (= defun (hd V9659)) (and (cons? (tl V9659)) (and (cons? (tl (tl V9659))) (and (cons? (tl (tl (tl V9659)))) (= () (tl (tl (tl (tl V9659)))))))))) (let KL (cons defun (cons (hd (tl V9659)) (cons (hd (tl (tl V9659))) (cons (shen.insert-tracking-code (hd (tl V9659)) (hd (tl (tl V9659))) (hd (tl (tl (tl V9659))))) ())))) (let Ob (eval-kl KL) (let Tr (set shen.*tracking* (cons Ob (value shen.*tracking*))) Ob)))) (true (simple-error "implementation error in shen.track-function"))))
+(defun shen.track-function (V9669) (cond ((and (cons? V9669) (and (= defun (hd V9669)) (and (cons? (tl V9669)) (and (cons? (tl (tl V9669))) (and (cons? (tl (tl (tl V9669)))) (= () (tl (tl (tl (tl V9669)))))))))) (let KL (cons defun (cons (hd (tl V9669)) (cons (hd (tl (tl V9669))) (cons (shen.insert-tracking-code (hd (tl V9669)) (hd (tl (tl V9669))) (hd (tl (tl (tl V9669))))) ())))) (let Ob (eval-kl KL) (let Tr (set shen.*tracking* (cons Ob (value shen.*tracking*))) Ob)))) (true (simple-error "implementation error in shen.track-function"))))
 
-(defun shen.insert-tracking-code (V9660 V9661 V9662) (cons do (cons (cons set (cons shen.*call* (cons (cons + (cons (cons value (cons shen.*call* ())) (cons 1 ()))) ()))) (cons (cons do (cons (cons shen.input-track (cons (cons value (cons shen.*call* ())) (cons V9660 (cons (shen.cons-form (shen.prolog-track V9662 V9661)) ())))) (cons (cons do (cons (cons shen.terpri-or-read-char ()) (cons (cons let (cons Result (cons V9662 (cons (cons do (cons (cons shen.output-track (cons (cons value (cons shen.*call* ())) (cons V9660 (cons Result ())))) (cons (cons do (cons (cons set (cons shen.*call* (cons (cons - (cons (cons value (cons shen.*call* ())) (cons 1 ()))) ()))) (cons (cons do (cons (cons shen.terpri-or-read-char ()) (cons Result ()))) ()))) ()))) ())))) ()))) ()))) ()))))
+(defun shen.insert-tracking-code (V9670 V9671 V9672) (cons do (cons (cons set (cons shen.*call* (cons (cons + (cons (cons value (cons shen.*call* ())) (cons 1 ()))) ()))) (cons (cons do (cons (cons shen.input-track (cons (cons value (cons shen.*call* ())) (cons V9670 (cons (shen.cons-form (shen.prolog-track V9672 V9671)) ())))) (cons (cons do (cons (cons shen.terpri-or-read-char ()) (cons (cons let (cons Result (cons V9672 (cons (cons do (cons (cons shen.output-track (cons (cons value (cons shen.*call* ())) (cons V9670 (cons Result ())))) (cons (cons do (cons (cons set (cons shen.*call* (cons (cons - (cons (cons value (cons shen.*call* ())) (cons 1 ()))) ()))) (cons (cons do (cons (cons shen.terpri-or-read-char ()) (cons Result ()))) ()))) ()))) ())))) ()))) ()))) ()))))
 
-(defun shen.prolog-track (V9663 V9664) (cond ((= (occurrences shen.incinfs V9663) 0) V9664) (true (shen.vector-dereference V9664 (shen.vector-parameter V9664)))))
+(defun shen.prolog-track (V9673 V9674) (cond ((= (occurrences shen.incinfs V9673) 0) V9674) (true (shen.vector-dereference V9674 (shen.vector-parameter V9674)))))
 
-(defun shen.vector-parameter (V9667) (cond ((= () V9667) ()) ((and (cons? V9667) (and (cons? (tl V9667)) (and (cons? (tl (tl V9667))) (and (cons? (tl (tl (tl V9667)))) (= () (tl (tl (tl (tl V9667))))))))) (hd V9667)) ((cons? V9667) (shen.vector-parameter (tl V9667))) (true (shen.f-error shen.vector-parameter))))
+(defun shen.vector-parameter (V9677) (cond ((= () V9677) ()) ((and (cons? V9677) (and (cons? (tl V9677)) (and (cons? (tl (tl V9677))) (and (cons? (tl (tl (tl V9677)))) (= () (tl (tl (tl (tl V9677))))))))) (hd V9677)) ((cons? V9677) (shen.vector-parameter (tl V9677))) (true (shen.f-error shen.vector-parameter))))
 
-(defun shen.vector-dereference (V9670 V9671) (cond ((= () V9671) V9670) ((and (cons? V9670) (and (cons? (tl V9670)) (and (cons? (tl (tl V9670))) (and (cons? (tl (tl (tl V9670)))) (= () (tl (tl (tl (tl V9670))))))))) V9670) ((cons? V9670) (cons (cons shen.deref (cons (hd V9670) (cons V9671 ()))) (shen.vector-dereference (tl V9670) V9671))) (true (shen.f-error shen.vector-dereference))))
+(defun shen.vector-dereference (V9680 V9681) (cond ((= () V9681) V9680) ((and (cons? V9680) (and (cons? (tl V9680)) (and (cons? (tl (tl V9680))) (and (cons? (tl (tl (tl V9680)))) (= () (tl (tl (tl (tl V9680))))))))) V9680) ((cons? V9680) (cons (cons shen.deref (cons (hd V9680) (cons V9681 ()))) (shen.vector-dereference (tl V9680) V9681))) (true (shen.f-error shen.vector-dereference))))
 
-(defun step (V9674) (cond ((= + V9674) (set shen.*step* true)) ((= - V9674) (set shen.*step* false)) (true (simple-error "step expects a + or a -.
+(defun step (V9684) (cond ((= + V9684) (set shen.*step* true)) ((= - V9684) (set shen.*step* false)) (true (simple-error "step expects a + or a -.
 "))))
 
-(defun spy (V9677) (cond ((= + V9677) (set shen.*spy* true)) ((= - V9677) (set shen.*spy* false)) (true (simple-error "spy expects a + or a -.
+(defun spy (V9687) (cond ((= + V9687) (set shen.*spy* true)) ((= - V9687) (set shen.*spy* false)) (true (simple-error "spy expects a + or a -.
 "))))
 
 (defun shen.terpri-or-read-char () (if (value shen.*step*) (shen.check-byte (read-byte (value *stinput*))) (nl 1)))
 
-(defun shen.check-byte (V9680) (cond ((= 94 V9680) (simple-error "aborted")) (true true)))
+(defun shen.check-byte (V9690) (cond ((= 94 V9690) (simple-error "aborted")) (true true)))
 
-(defun shen.input-track (V9681 V9682 V9683) (do (pr (cn "
-" (shen.app (shen.spaces V9681) (cn "<" (shen.app V9681 (cn "> Inputs to " (shen.app V9682 (cn " 
-" (shen.app (shen.spaces V9681) "" shen.a)) shen.a)) shen.a)) shen.a)) (stoutput)) (shen.recursively-print V9683)))
+(defun shen.input-track (V9691 V9692 V9693) (do (pr (cn "
+" (shen.app (shen.spaces V9691) (cn "<" (shen.app V9691 (cn "> Inputs to " (shen.app V9692 (cn " 
+" (shen.app (shen.spaces V9691) "" shen.a)) shen.a)) shen.a)) shen.a)) (stoutput)) (shen.recursively-print V9693)))
 
-(defun shen.recursively-print (V9686) (cond ((= () V9686) (pr " ==>" (stoutput))) ((cons? V9686) (do (print (hd V9686)) (do (pr ", " (stoutput)) (shen.recursively-print (tl V9686))))) (true (simple-error "implementation error in shen.recursively-print"))))
+(defun shen.recursively-print (V9696) (cond ((= () V9696) (pr " ==>" (stoutput))) ((cons? V9696) (do (print (hd V9696)) (do (pr ", " (stoutput)) (shen.recursively-print (tl V9696))))) (true (simple-error "implementation error in shen.recursively-print"))))
 
-(defun shen.spaces (V9687) (cond ((= 0 V9687) "") (true (cn " " (shen.spaces (- V9687 1))))))
+(defun shen.spaces (V9697) (cond ((= 0 V9697) "") (true (cn " " (shen.spaces (- V9697 1))))))
 
-(defun shen.output-track (V9688 V9689 V9690) (pr (cn "
-" (shen.app (shen.spaces V9688) (cn "<" (shen.app V9688 (cn "> Output from " (shen.app V9689 (cn " 
-" (shen.app (shen.spaces V9688) (cn "==> " (shen.app V9690 "" shen.s)) shen.a)) shen.a)) shen.a)) shen.a)) (stoutput)))
+(defun shen.output-track (V9698 V9699 V9700) (pr (cn "
+" (shen.app (shen.spaces V9698) (cn "<" (shen.app V9698 (cn "> Output from " (shen.app V9699 (cn " 
+" (shen.app (shen.spaces V9698) (cn "==> " (shen.app V9700 "" shen.s)) shen.a)) shen.a)) shen.a)) shen.a)) (stoutput)))
 
-(defun untrack (V9691) (do (set shen.*tracking* (remove V9691 (value shen.*tracking*))) (trap-error (eval (ps V9691)) (lambda E V9691))))
+(defun untrack (V9701) (do (set shen.*tracking* (remove V9701 (value shen.*tracking*))) (trap-error (eval (ps V9701)) (lambda E V9701))))
 
-(defun remove (V9692 V9693) (shen.remove-h V9692 V9693 ()))
+(defun remove (V9702 V9703) (shen.remove-h V9702 V9703 ()))
 
-(defun shen.remove-h (V9703 V9704 V9705) (cond ((= () V9704) (reverse V9705)) ((and (cons? V9704) (= V9703 (hd V9704))) (shen.remove-h (hd V9704) (tl V9704) V9705)) ((cons? V9704) (shen.remove-h V9703 (tl V9704) (cons (hd V9704) V9705))) (true (simple-error "implementation error in shen.remove-h"))))
+(defun shen.remove-h (V9713 V9714 V9715) (cond ((= () V9714) (reverse V9715)) ((and (cons? V9714) (= V9713 (hd V9714))) (shen.remove-h (hd V9714) (tl V9714) V9715)) ((cons? V9714) (shen.remove-h V9713 (tl V9714) (cons (hd V9714) V9715))) (true (simple-error "implementation error in shen.remove-h"))))
 
-(defun profile (V9706) (do (set shen.*profiled* (cons V9706 (value shen.*profiled*))) (shen.profile-help (ps V9706))))
+(defun profile (V9716) (do (set shen.*profiled* (cons V9716 (value shen.*profiled*))) (shen.profile-help (ps V9716))))
 
-(defun shen.profile-help (V9709) (cond ((and (cons? V9709) (and (= defun (hd V9709)) (and (cons? (tl V9709)) (and (cons? (tl (tl V9709))) (and (cons? (tl (tl (tl V9709)))) (= () (tl (tl (tl (tl V9709)))))))))) (let G (gensym shen.f) (let Profile (cons defun (cons (hd (tl V9709)) (cons (hd (tl (tl V9709))) (cons (shen.profile-func (hd (tl V9709)) (hd (tl (tl V9709))) (cons G (hd (tl (tl V9709))))) ())))) (let Def (cons defun (cons G (cons (hd (tl (tl V9709))) (cons (subst G (hd (tl V9709)) (hd (tl (tl (tl V9709))))) ())))) (let CompileProfile (eval-kl Profile) (let CompileG (eval-kl Def) (hd (tl V9709)))))))) (true (simple-error "Cannot profile.
+(defun shen.profile-help (V9719) (cond ((and (cons? V9719) (and (= defun (hd V9719)) (and (cons? (tl V9719)) (and (cons? (tl (tl V9719))) (and (cons? (tl (tl (tl V9719)))) (= () (tl (tl (tl (tl V9719)))))))))) (let G (gensym shen.f) (let Profile (cons defun (cons (hd (tl V9719)) (cons (hd (tl (tl V9719))) (cons (shen.profile-func (hd (tl V9719)) (hd (tl (tl V9719))) (cons G (hd (tl (tl V9719))))) ())))) (let Def (cons defun (cons G (cons (hd (tl (tl V9719))) (cons (subst G (hd (tl V9719)) (hd (tl (tl (tl V9719))))) ())))) (let CompileProfile (eval-kl Profile) (let CompileG (eval-kl Def) (hd (tl V9719)))))))) (true (simple-error "Cannot profile.
 "))))
 
-(defun unprofile (V9710) (do (set shen.*profiled* (remove V9710 (value shen.*profiled*))) (trap-error (eval (ps V9710)) (lambda E V9710))))
+(defun unprofile (V9720) (do (set shen.*profiled* (remove V9720 (value shen.*profiled*))) (trap-error (eval (ps V9720)) (lambda E V9720))))
 
-(defun shen.profiled? (V9711) (element? V9711 (value shen.*profiled*)))
+(defun shen.profiled? (V9721) (element? V9721 (value shen.*profiled*)))
 
-(defun shen.profile-func (V9712 V9713 V9714) (cons let (cons Start (cons (cons get-time (cons run ())) (cons (cons let (cons Result (cons V9714 (cons (cons let (cons Finish (cons (cons - (cons (cons get-time (cons run ())) (cons Start ()))) (cons (cons let (cons Record (cons (cons shen.put-profile (cons V9712 (cons (cons + (cons (cons shen.get-profile (cons V9712 ())) (cons Finish ()))) ()))) (cons Result ())))) ())))) ())))) ())))))
+(defun shen.profile-func (V9722 V9723 V9724) (cons let (cons Start (cons (cons get-time (cons run ())) (cons (cons let (cons Result (cons V9724 (cons (cons let (cons Finish (cons (cons - (cons (cons get-time (cons run ())) (cons Start ()))) (cons (cons let (cons Record (cons (cons shen.put-profile (cons V9722 (cons (cons + (cons (cons shen.get-profile (cons V9722 ())) (cons Finish ()))) ()))) (cons Result ())))) ())))) ())))) ())))))
 
-(defun profile-results (V9715) (let Results (shen.get-profile V9715) (let Initialise (shen.put-profile V9715 0) (@p V9715 Results))))
+(defun profile-results (V9725) (let Results (shen.get-profile V9725) (let Initialise (shen.put-profile V9725 0) (@p V9725 Results))))
 
-(defun shen.get-profile (V9716) (trap-error (get V9716 profile (value *property-vector*)) (lambda E 0)))
+(defun shen.get-profile (V9726) (trap-error (get V9726 profile (value *property-vector*)) (lambda E 0)))
 
-(defun shen.put-profile (V9717 V9718) (put V9717 profile V9718 (value *property-vector*)))
+(defun shen.put-profile (V9727 V9728) (put V9727 profile V9728 (value *property-vector*)))
 
