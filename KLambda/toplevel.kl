@@ -3,7 +3,7 @@
 (defun shen.loop () (do (shen.initialise_environment) (do (shen.prompt) (do (trap-error (shen.read-evaluate-print) (lambda E (do (pr (error-to-string E) (stoutput)) (nl 0)))) (shen.loop)))))
 
 (defun shen.credits () (do (pr "
-Shen, www.shenlanguage.org, copyright (C) 2010-2021, Mark Tarver
+Shen, www.shenlanguage.org, copyright (C) 2010-2022, Mark Tarver
 " (stoutput)) (do (pr (cn "version: S" (shen.app (value *version*) (cn ", language: " (shen.app (value *language*) (cn ", platform: " (shen.app (value *implementation*) (cn " " (shen.app (value *release*) "
 " shen.a)) shen.a)) shen.a)) shen.a)) (stoutput)) (pr (cn "port " (shen.app (value *port*) (cn ", ported by " (shen.app (value *porters*) "
 
@@ -17,28 +17,30 @@ Shen, www.shenlanguage.org, copyright (C) 2010-2021, Mark Tarver
 
 (defun shen.read-evaluate-print () (let Package (value shen.*package*) (let Lineread (shen.package-user-input Package (lineread (stinput))) (let History (shen.update-history) (shen.evaluate-lineread Lineread History (value shen.*tc*))))))
 
-(defun shen.package-user-input (V9572 V9573) (cond ((= null V9572) V9573) (true (let Str (str V9572) (let External (external V9572) (map (lambda X (shen.pui-h Str External X)) V9573))))))
+(defun shen.package-user-input (V9597 V9598) (cond ((= null V9597) V9598) (true (let Str (str V9597) (let External (external V9597) (map (lambda X (shen.pui-h Str External X)) V9598))))))
 
-(defun shen.pui-h (V9578 V9579 V9580) (cond ((and (cons? V9580) (and (= fn (hd V9580)) (and (cons? (tl V9580)) (= () (tl (tl V9580)))))) (if (shen.internal? (hd (tl V9580)) V9578 V9579) (cons fn (cons (shen.intern-in-package V9578 (hd (tl V9580))) ())) V9580)) ((cons? V9580) (if (shen.internal? (hd V9580) V9578 V9579) (cons (shen.intern-in-package V9578 (hd V9580)) (map (lambda Y (shen.pui-h V9578 V9579 Y)) (tl V9580))) (if (cons? (hd V9580)) (map (lambda Y (shen.pui-h V9578 V9579 Y)) V9580) (cons (hd V9580) (map (lambda Y (shen.pui-h V9578 V9579 Y)) (tl V9580)))))) (true V9580)))
+(defun shen.pui-h (V9603 V9604 V9605) (cond ((and (cons? V9605) (and (= fn (hd V9605)) (and (cons? (tl V9605)) (= () (tl (tl V9605)))))) (if (shen.internal? (hd (tl V9605)) V9603 V9604) (cons fn (cons (shen.intern-in-package V9603 (hd (tl V9605))) ())) V9605)) ((cons? V9605) (if (shen.internal? (hd V9605) V9603 V9604) (cons (shen.intern-in-package V9603 (hd V9605)) (map (lambda Y (shen.pui-h V9603 V9604 Y)) (tl V9605))) (if (cons? (hd V9605)) (map (lambda Y (shen.pui-h V9603 V9604 Y)) V9605) (cons (hd V9605) (map (lambda Y (shen.pui-h V9603 V9604 Y)) (tl V9605)))))) (true V9605)))
 
-(defun shen.update-history () (set shen.*history* (cons (it) (value shen.*history*))))
+(defun shen.update-history () (set shen.*history* (cons (shen.trim-it (it)) (value shen.*history*))))
 
-(defun shen.evaluate-lineread (V9591 V9592 V9593) (cond ((and (cons? V9591) (and (= () (tl V9591)) (and (cons? V9592) (and (= "!!" (hd V9592)) (cons? (tl V9592)))))) (let Y (read-from-string (hd (tl V9592))) (let NewHistory (set shen.*history* (cons (hd (tl V9592)) (tl V9592))) (let Print (pr (shen.app (hd (tl V9592)) "
-" shen.a) (stoutput)) (shen.evaluate-lineread Y NewHistory V9593))))) ((and (cons? V9591) (and (= () (tl V9591)) (and (cons? V9592) (and (shen.+string? (hd V9592)) (= "%" (hdstr (hd V9592))))))) (let Read (hd (read-from-string (tlstr (hd V9592)))) (let Peek (shen.peek-history Read (tlstr (hd V9592)) (tl V9592)) (let NewHistory (set shen.*history* (tl V9592)) (abort))))) ((and (cons? V9591) (and (= () (tl V9591)) (and (cons? V9592) (and (shen.+string? (hd V9592)) (= "!" (hdstr (hd V9592))))))) (let Read (hd (read-from-string (tlstr (hd V9592)))) (let Match (shen.use-history Read (tlstr (hd V9592)) (tl V9592)) (let Print (pr (shen.app Match "
-" shen.a) (stoutput)) (let Y (read-from-string Match) (let NewHistory (set shen.*history* (cons Match (tl V9592))) (shen.evaluate-lineread Y NewHistory V9593))))))) ((and (cons? V9591) (and (= () (tl V9591)) (and (cons? V9592) (and (shen.+string? (hd V9592)) (= "%" (hdstr (hd V9592))))))) (let Read (hd (read-from-string (tlstr (hd V9592)))) (let Peek (shen.peek-history Read (tlstr (hd V9592)) (tl V9592)) (let NewHistory (set shen.*history* (tl V9592)) (abort))))) ((= true V9593) (shen.check-eval-and-print V9591)) ((= false V9593) (shen.eval-and-print V9591)) (true (simple-error "implementation error in shen.evaluate-lineread"))))
+(defun shen.trim-it (V9606) (cond ((and (shen.+string? V9606) (shen.whitespace? (string->n (hdstr V9606)))) (shen.trim-it (tlstr V9606))) (true V9606)))
 
-(defun shen.use-history (V9594 V9595 V9596) (if (integer? V9594) (nth (+ 1 V9594) (reverse V9596)) (if (symbol? V9594) (shen.string-match V9595 V9596) (simple-error "! expects a number or a symbol
+(defun shen.evaluate-lineread (V9625 V9626 V9627) (cond ((and (cons? V9625) (and (= () (tl V9625)) (and (cons? V9626) (and (= "!!" (hd V9626)) (cons? (tl V9626)))))) (let Y (read-from-string (hd (tl V9626))) (let NewHistory (set shen.*history* (cons (hd (tl V9626)) (tl V9626))) (let Print (pr (shen.app (hd (tl V9626)) "
+" shen.a) (stoutput)) (shen.evaluate-lineread Y NewHistory V9627))))) ((and (cons? V9625) (and (= () (tl V9625)) (and (cons? V9626) (and (shen.+string? (hd V9626)) (= "%" (hdstr (hd V9626))))))) (let Read (hd (read-from-string (tlstr (hd V9626)))) (let Peek (shen.peek-history Read (tlstr (hd V9626)) (tl V9626)) (let NewHistory (set shen.*history* (tl V9626)) (abort))))) ((and (cons? V9625) (and (= () (tl V9625)) (and (cons? V9626) (and (shen.+string? (hd V9626)) (= "!" (hdstr (hd V9626))))))) (let Read (hd (read-from-string (tlstr (hd V9626)))) (let Match (shen.use-history Read (tlstr (hd V9626)) (tl V9626)) (let Print (pr (shen.app Match "
+" shen.a) (stoutput)) (let Y (read-from-string Match) (let NewHistory (set shen.*history* (cons Match (tl V9626))) (shen.evaluate-lineread Y NewHistory V9627))))))) ((and (cons? V9625) (and (= () (tl V9625)) (and (cons? V9626) (and (shen.+string? (hd V9626)) (= "%" (hdstr (hd V9626))))))) (let Read (hd (read-from-string (tlstr (hd V9626)))) (let Peek (shen.peek-history Read (tlstr (hd V9626)) (tl V9626)) (let NewHistory (set shen.*history* (tl V9626)) (abort))))) ((= true V9627) (shen.check-eval-and-print V9625)) ((= false V9627) (shen.eval-and-print V9625)) (true (simple-error "implementation error in shen.evaluate-lineread"))))
+
+(defun shen.use-history (V9628 V9629 V9630) (if (integer? V9628) (nth (+ 1 V9628) (reverse V9630)) (if (symbol? V9628) (shen.string-match V9629 V9630) (simple-error "! expects a number or a symbol
 "))))
 
-(defun shen.peek-history (V9597 V9598 V9599) (if (integer? V9597) (pr (cn "
-" (shen.app (nth (+ 1 V9597) (reverse V9599)) "" shen.a)) (stoutput)) (if (or (= V9598 "") (symbol? V9597)) (shen.recursive-string-match 0 V9598 (reverse V9599)) (simple-error "% expects a number or a symbol
+(defun shen.peek-history (V9631 V9632 V9633) (if (integer? V9631) (pr (cn "
+" (shen.app (nth (+ 1 V9631) (reverse V9633)) "" shen.a)) (stoutput)) (if (or (= V9632 "") (symbol? V9631)) (shen.recursive-string-match 0 V9632 (reverse V9633)) (simple-error "% expects a number or a symbol
 "))))
 
-(defun shen.string-match (V9609 V9610) (cond ((= () V9610) (simple-error "
-input not found")) ((and (cons? V9610) (shen.string-prefix? V9609 (hd V9610))) (hd V9610)) ((cons? V9610) (shen.string-match V9609 (tl V9610))) (true (simple-error "implementation error in shen.string-match"))))
+(defun shen.string-match (V9643 V9644) (cond ((= () V9644) (simple-error "
+input not found")) ((and (cons? V9644) (shen.string-prefix? V9643 (hd V9644))) (hd V9644)) ((cons? V9644) (shen.string-match V9643 (tl V9644))) (true (simple-error "implementation error in shen.string-match"))))
 
-(defun shen.string-prefix? (V9618 V9619) (cond ((= "" V9618) true) ((and (shen.+string? V9618) (shen.whitespace? (string->n (hdstr V9618)))) (shen.string-prefix? (tlstr V9618) V9619)) ((and (shen.+string? V9619) (shen.whitespace? (string->n (hdstr V9619)))) (shen.string-prefix? V9618 (tlstr V9619))) ((and (shen.+string? V9619) (= "(" (hdstr V9619))) (shen.string-prefix? V9618 (tlstr V9619))) ((and (shen.+string? V9618) (and (shen.+string? V9619) (= (hdstr V9618) (hdstr V9619)))) (shen.string-prefix? (tlstr V9618) (tlstr V9619))) (true false)))
+(defun shen.string-prefix? (V9652 V9653) (cond ((= "" V9652) true) ((and (shen.+string? V9652) (shen.whitespace? (string->n (hdstr V9652)))) (shen.string-prefix? (tlstr V9652) V9653)) ((and (shen.+string? V9653) (shen.whitespace? (string->n (hdstr V9653)))) (shen.string-prefix? V9652 (tlstr V9653))) ((and (shen.+string? V9653) (= "(" (hdstr V9653))) (shen.string-prefix? V9652 (tlstr V9653))) ((and (shen.+string? V9652) (and (shen.+string? V9653) (= (hdstr V9652) (hdstr V9653)))) (shen.string-prefix? (tlstr V9652) (tlstr V9653))) (true false)))
 
-(defun shen.recursive-string-match (V9630 V9631 V9632) (cond ((= () V9632) shen.skip) ((cons? V9632) (do (if (shen.string-prefix? V9631 (hd V9632)) (pr (shen.app V9630 (cn ". " (shen.app (hd V9632) "
-" shen.a)) shen.a) (stoutput)) shen.skip) (shen.recursive-string-match (+ V9630 1) V9631 (tl V9632)))) (true (simple-error "implementation error in shen.recursive-string-match"))))
+(defun shen.recursive-string-match (V9664 V9665 V9666) (cond ((= () V9666) shen.skip) ((cons? V9666) (do (if (shen.string-prefix? V9665 (hd V9666)) (pr (shen.app V9664 (cn ". " (shen.app (hd V9666) "
+" shen.a)) shen.a) (stoutput)) shen.skip) (shen.recursive-string-match (+ V9664 1) V9665 (tl V9666)))) (true (simple-error "implementation error in shen.recursive-string-match"))))
 

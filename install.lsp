@@ -95,8 +95,15 @@
                    
 (MAPC 'FMAKUNBOUND '(boot readsource objectcode))
 
+(DEFUN trace (F) (EVAL (READ-FROM-STRING (FORMAT NIL "(TRACE ~A)" F))))
+
+(cd "StLib")
+(load "install.shen")
+(cd "")
+(tc '-)
+
 #+SBCL
-(SAVE-LISP-AND-DIE "sbcl-shen.exe" :EXECUTABLE T :TOPLEVEL 'shen.shen)
+(SAVE-LISP-AND-DIE "sbcl-shen.exe" :SAVE-RUNTIME-OPTIONS T :EXECUTABLE T :TOPLEVEL 'shen.shen)
 
 #+CLISP
 (EXT:SAVEINITMEM "clisp-shen.exe" :EXECUTABLE 0 :QUIET T :INIT-FUNCTION 'shen.shen)

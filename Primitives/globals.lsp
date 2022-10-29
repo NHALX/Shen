@@ -5,7 +5,7 @@
 (SETQ *language* "Common Lisp"
       *implementation* (LISP-IMPLEMENTATION-TYPE)
       *porters* "Mark Tarver"
-      *port* 3.1
+      *port* 3.2
       *os* (SOFTWARE-TYPE)
       *stinput* *STANDARD-INPUT*
       *stoutput* *STANDARD-OUTPUT*)

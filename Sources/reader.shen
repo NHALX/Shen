@@ -2,7 +2,7 @@
 
 \\                  All rights reserved.
 
-(package shen [shen]                  
+(package shen [shen foreign]                  
                     
 (define read-file
   File -> (let Bytelist (read-file-as-bytelist File)
@@ -519,6 +519,7 @@
                         N (length X)
                         (cases (element? [F | X] Types)           [F | X]
                                (shen-call? F)                     [F | X]
+                               (foreign? [F | X])                 (unpack-foreign [F | X])
                                (fn-call? [F | X])                 (fn-call [F | X])
                                (zero-place? [F | X])              [F | X]
                                (undefined-f? F ArityF)            (simple-curry [[fn F] | X])
@@ -526,7 +527,14 @@
                                (application? F)                   (simple-curry [F | X])
                                (partial-application*? F ArityF N) (lambda-function [F | X] (- ArityF N))
                                (overapplication? F ArityF N)      (simple-curry [[fn F] | X])
-                               true                               [F | X])))                         
+                               true                               [F | X]))) 
+                               
+(define unpack-foreign
+  [[foreign F] | X] -> [F | X])
+  
+(define foreign?
+  [[foreign F] | X] -> true
+  _ -> false)                                                       
                          
 (define zero-place?
   [F] -> true
@@ -541,6 +549,7 @@
                   
 (define application? 
   [protect _] -> false
+  [foreign _] -> false
   F -> (cons? F))
                  	          
 (define undefined-f?
