@@ -209,7 +209,17 @@
   X V Y -> Y) 
 
 (define kl-body 
-   Rules Parameters -> (map (/. R (triple-stack [] (fst R) Parameters (snd R))) Rules))
+   Rules Parameters -> (map (/. R (triple-stack [] (fst R) Parameters (alpha-convert (snd R)))) Rules))
+   
+(define alpha-convert
+  [lambda X Y] -> (let NewV (gensym (protect Z))
+                       Alpha [lambda NewV (beta X NewV Y)]
+                       (map (/. Z (alpha-convert Z)) Alpha))
+  [let X Y Z]  -> (let NewV (gensym (protect W))
+                       Alpha [let NewV Y (beta X NewV Z)]
+                       (map (/. Z (alpha-convert Z)) Alpha))
+  [X | Y]      -> (map (/. Z (alpha-convert Z)) [X | Y])
+  X -> X)                                              
    
 (define triple-stack
   Test [] [] [where P Continue] -> (triple-stack [P | Test] [] [] Continue)
@@ -234,7 +244,7 @@
   X _ [lambda X Y] -> [lambda X Y]
   X W [let X Y Z] -> [let X (beta X W Y) Z]
   X W [Y | Z] -> (map (/. V (beta X W V)) [Y | Z])
-  _ _ X -> X)   
+  _ _ X -> X) 
   
 (define op1
   cons -> hd

@@ -1,78 +1,78 @@
-(defun macroexpand (V6905) (let Fs (map (lambda X (tl X)) (value *macros*)) (shen.macroexpand-h V6905 Fs Fs)))
+(defun macroexpand (V6932) (let Fs (map (lambda X (tl X)) (value *macros*)) (shen.macroexpand-h V6932 Fs Fs)))
 
-(defun shen.macroexpand-h (V6914 V6915 V6916) (cond ((= () V6915) V6914) ((cons? V6915) (let Y (shen.walk (hd V6915) V6914) (if (= V6914 Y) (shen.macroexpand-h V6914 (tl V6915) V6916) (shen.macroexpand-h Y V6916 V6916)))) (true (simple-error "implementation error in shen.macroexpand-h"))))
+(defun shen.macroexpand-h (V6941 V6942 V6943) (cond ((= () V6942) V6941) ((cons? V6942) (let Y (shen.walk (hd V6942) V6941) (if (= V6941 Y) (shen.macroexpand-h V6941 (tl V6942) V6943) (shen.macroexpand-h Y V6943 V6943)))) (true (simple-error "implementation error in shen.macroexpand-h"))))
 
-(defun shen.walk (V6917 V6918) (cond ((cons? V6918) (V6917 (map (lambda Z (shen.walk V6917 Z)) V6918))) (true (V6917 V6918))))
+(defun shen.walk (V6944 V6945) (cond ((cons? V6945) (V6944 (map (lambda Z (shen.walk V6944 Z)) V6945))) (true (V6944 V6945))))
 
-(defun shen.defmacro-macro (V6919) (cond ((and (cons? V6919) (and (= defmacro (hd V6919)) (cons? (tl V6919)))) (let Default (cons X (cons -> (cons X ()))) (let Def (eval (cons define (cons (hd (tl V6919)) (append (tl (tl V6919)) Default)))) (let Record (shen.record-macro (hd (tl V6919)) (lambda X ((hd (tl V6919)) X))) (hd (tl V6919)))))) (true V6919)))
+(defun shen.defmacro-macro (V6946) (cond ((and (cons? V6946) (and (= defmacro (hd V6946)) (cons? (tl V6946)))) (let Default (cons X (cons -> (cons X ()))) (let Def (eval (cons define (cons (hd (tl V6946)) (append (tl (tl V6946)) Default)))) (let Record (shen.record-macro (hd (tl V6946)) (lambda X ((hd (tl V6946)) X))) (hd (tl V6946)))))) (true V6946)))
 
-(defun shen.u!-macro (V6920) (cond ((and (cons? V6920) (and (= u! (hd V6920)) (and (cons? (tl V6920)) (= () (tl (tl V6920)))))) (cons protect (cons (shen.make-uppercase (hd (tl V6920))) ()))) (true V6920)))
+(defun shen.u!-macro (V6947) (cond ((and (cons? V6947) (and (= u! (hd V6947)) (and (cons? (tl V6947)) (= () (tl (tl V6947)))))) (cons protect (cons (shen.make-uppercase (hd (tl V6947))) ()))) (true V6947)))
 
-(defun shen.make-uppercase (V6921) (intern (shen.mu-h (str V6921))))
+(defun shen.make-uppercase (V6948) (intern (shen.mu-h (str V6948))))
 
-(defun shen.mu-h (V6922) (cond ((= "" V6922) "") ((shen.+string? V6922) (let ASCII (string->n (hdstr V6922)) (let ASCII-32 (- ASCII 32) (let Upper (if (and (>= ASCII 97) (<= ASCII 122)) (n->string ASCII-32) (hdstr V6922)) (@s Upper (shen.mu-h (tlstr V6922))))))) (true (shen.f-error shen.mu-h))))
+(defun shen.mu-h (V6949) (cond ((= "" V6949) "") ((shen.+string? V6949) (let ASCII (string->n (hdstr V6949)) (let ASCII-32 (- ASCII 32) (let Upper (if (and (>= ASCII 97) (<= ASCII 122)) (n->string ASCII-32) (hdstr V6949)) (@s Upper (shen.mu-h (tlstr V6949))))))) (true (shen.f-error shen.mu-h))))
 
-(defun shen.record-macro (V6923 V6924) (set *macros* (shen.update-assoc V6923 V6924 (value *macros*))))
+(defun shen.record-macro (V6950 V6951) (set *macros* (shen.update-assoc V6950 V6951 (value *macros*))))
 
-(defun shen.update-assoc (V6934 V6935 V6936) (cond ((= () V6936) (cons (cons V6934 V6935) ())) ((and (cons? V6936) (and (cons? (hd V6936)) (= V6934 (hd (hd V6936))))) (cons (cons (hd (hd V6936)) V6935) (tl V6936))) ((cons? V6936) (cons (hd V6936) (shen.update-assoc V6934 V6935 (tl V6936)))) (true (simple-error "implementation error in shen.update-assoc"))))
+(defun shen.update-assoc (V6961 V6962 V6963) (cond ((= () V6963) (cons (cons V6961 V6962) ())) ((and (cons? V6963) (and (cons? (hd V6963)) (= V6961 (hd (hd V6963))))) (cons (cons (hd (hd V6963)) V6962) (tl V6963))) ((cons? V6963) (cons (hd V6963) (shen.update-assoc V6961 V6962 (tl V6963)))) (true (simple-error "implementation error in shen.update-assoc"))))
 
-(defun shen.error-macro (V6937) (cond ((and (cons? V6937) (and (= error (hd V6937)) (cons? (tl V6937)))) (cons simple-error (cons (shen.mkstr (hd (tl V6937)) (tl (tl V6937))) ()))) (true V6937)))
+(defun shen.error-macro (V6964) (cond ((and (cons? V6964) (and (= error (hd V6964)) (cons? (tl V6964)))) (cons simple-error (cons (shen.mkstr (hd (tl V6964)) (tl (tl V6964))) ()))) (true V6964)))
 
-(defun shen.output-macro (V6938) (cond ((and (cons? V6938) (and (= output (hd V6938)) (cons? (tl V6938)))) (cons pr (cons (shen.mkstr (hd (tl V6938)) (tl (tl V6938))) (cons (cons stoutput ()) ())))) ((and (cons? V6938) (and (= pr (hd V6938)) (and (cons? (tl V6938)) (= () (tl (tl V6938)))))) (cons pr (cons (hd (tl V6938)) (cons (cons stoutput ()) ())))) (true V6938)))
+(defun shen.output-macro (V6965) (cond ((and (cons? V6965) (and (= output (hd V6965)) (cons? (tl V6965)))) (cons pr (cons (shen.mkstr (hd (tl V6965)) (tl (tl V6965))) (cons (cons stoutput ()) ())))) ((and (cons? V6965) (and (= pr (hd V6965)) (and (cons? (tl V6965)) (= () (tl (tl V6965)))))) (cons pr (cons (hd (tl V6965)) (cons (cons stoutput ()) ())))) (true V6965)))
 
-(defun shen.make-string-macro (V6939) (cond ((and (cons? V6939) (and (= make-string (hd V6939)) (cons? (tl V6939)))) (shen.mkstr (hd (tl V6939)) (tl (tl V6939)))) (true V6939)))
+(defun shen.make-string-macro (V6966) (cond ((and (cons? V6966) (and (= make-string (hd V6966)) (cons? (tl V6966)))) (shen.mkstr (hd (tl V6966)) (tl (tl V6966)))) (true V6966)))
 
-(defun shen.input-macro (V6940) (cond ((and (cons? V6940) (and (= lineread (hd V6940)) (= () (tl V6940)))) (cons lineread (cons (cons stinput ()) ()))) ((and (cons? V6940) (and (= input (hd V6940)) (= () (tl V6940)))) (cons input (cons (cons stinput ()) ()))) ((and (cons? V6940) (and (= read (hd V6940)) (= () (tl V6940)))) (cons read (cons (cons stinput ()) ()))) ((and (cons? V6940) (and (= input+ (hd V6940)) (and (cons? (tl V6940)) (= () (tl (tl V6940)))))) (cons input+ (cons (hd (tl V6940)) (cons (cons stinput ()) ())))) ((and (cons? V6940) (and (= read-byte (hd V6940)) (= () (tl V6940)))) (if (shen.char-stinput? (stinput)) (cons string->n (cons (cons shen.read-unit-string (cons (cons stinput ()) ())) ())) (cons read-byte (cons (cons stinput ()) ())))) (true V6940)))
+(defun shen.input-macro (V6967) (cond ((and (cons? V6967) (and (= lineread (hd V6967)) (= () (tl V6967)))) (cons lineread (cons (cons stinput ()) ()))) ((and (cons? V6967) (and (= input (hd V6967)) (= () (tl V6967)))) (cons input (cons (cons stinput ()) ()))) ((and (cons? V6967) (and (= read (hd V6967)) (= () (tl V6967)))) (cons read (cons (cons stinput ()) ()))) ((and (cons? V6967) (and (= input+ (hd V6967)) (and (cons? (tl V6967)) (= () (tl (tl V6967)))))) (cons input+ (cons (hd (tl V6967)) (cons (cons stinput ()) ())))) ((and (cons? V6967) (and (= read-byte (hd V6967)) (= () (tl V6967)))) (if (shen.char-stinput? (stinput)) (cons string->n (cons (cons shen.read-unit-string (cons (cons stinput ()) ())) ())) (cons read-byte (cons (cons stinput ()) ())))) (true V6967)))
 
-(defun shen.defcc-macro (V6941) (cond ((and (cons? V6941) (= defcc (hd V6941))) (shen.yacc->shen (tl V6941))) (true V6941)))
+(defun shen.defcc-macro (V6968) (cond ((and (cons? V6968) (= defcc (hd V6968))) (shen.yacc->shen (tl V6968))) (true V6968)))
 
-(defun shen.prolog-macro (V6942) (cond ((and (cons? V6942) (= prolog? (hd V6942))) (shen.call-prolog (tl V6942))) (true V6942)))
+(defun shen.prolog-macro (V6969) (cond ((and (cons? V6969) (= prolog? (hd V6969))) (shen.call-prolog (tl V6969))) (true V6969)))
 
-(defun shen.call-prolog (V6943) (let Bindings (cons shen.reset-prolog-vector ()) (let Lock (cons @v (cons true (cons 0 (cons (cons vector (cons 0 ())) ())))) (let Key 0 (let Continuation (cons freeze (cons true ())) (let CLiterals (compile (lambda X (shen.<body> X)) V6943) (let Received (shen.received V6943) (let B (gensym V) (let L (gensym L) (let K (gensym K) (let C (gensym C) (let Lambda (cons lambda (cons B (cons (cons lambda (cons L (cons (cons lambda (cons K (cons (cons lambda (cons C (cons (shen.continue Received CLiterals B L K C) ()))) ()))) ()))) ()))) (cons Lambda (cons Bindings (cons Lock (cons Key (cons Continuation ())))))))))))))))))
+(defun shen.call-prolog (V6970) (let Bindings (cons shen.reset-prolog-vector ()) (let Lock (cons @v (cons true (cons 0 (cons (cons vector (cons 0 ())) ())))) (let Key 0 (let Continuation (cons freeze (cons true ())) (let CLiterals (compile (lambda X (shen.<body> X)) V6970) (let Received (shen.received V6970) (let B (gensym V) (let L (gensym L) (let K (gensym K) (let C (gensym C) (let Lambda (cons lambda (cons B (cons (cons lambda (cons L (cons (cons lambda (cons K (cons (cons lambda (cons C (cons (shen.continue Received CLiterals B L K C) ()))) ()))) ()))) ()))) (cons Lambda (cons Bindings (cons Lock (cons Key (cons Continuation ())))))))))))))))))
 
-(defun shen.received (V6946) (cond ((and (cons? V6946) (and (= receive (hd V6946)) (and (cons? (tl V6946)) (= () (tl (tl V6946)))))) (tl V6946)) ((cons? V6946) (union (shen.received (hd V6946)) (shen.received (tl V6946)))) (true ())))
+(defun shen.received (V6973) (cond ((and (cons? V6973) (and (= receive (hd V6973)) (and (cons? (tl V6973)) (= () (tl (tl V6973)))))) (tl V6973)) ((cons? V6973) (union (shen.received (hd V6973)) (shen.received (tl V6973)))) (true ())))
 
 (defun shen.reset-prolog-vector () (address-> (value shen.*prolog-vector*) 1 2))
 
-(defun receive (V6947) V6947)
+(defun receive (V6974) V6974)
 
-(defun shen.defprolog-macro (V6948) (cond ((and (cons? V6948) (and (= defprolog (hd V6948)) (cons? (tl V6948)))) (shen.compile-prolog (hd (tl V6948)) (tl (tl V6948)))) (true V6948)))
+(defun shen.defprolog-macro (V6975) (cond ((and (cons? V6975) (and (= defprolog (hd V6975)) (cons? (tl V6975)))) (shen.compile-prolog (hd (tl V6975)) (tl (tl V6975)))) (true V6975)))
 
-(defun shen.datatype-macro (V6949) (cond ((and (cons? V6949) (and (= datatype (hd V6949)) (cons? (tl V6949)))) (let D (shen.intern-type (hd (tl V6949))) (let Compile (compile (lambda X (shen.<datatype> X)) (cons D (tl (tl V6949)))) D))) (true V6949)))
+(defun shen.datatype-macro (V6976) (cond ((and (cons? V6976) (and (= datatype (hd V6976)) (cons? (tl V6976)))) (let D (shen.intern-type (hd (tl V6976))) (let Compile (compile (lambda X (shen.<datatype> X)) (cons D (tl (tl V6976)))) D))) (true V6976)))
 
-(defun shen.rcons_form (V6950) (cond ((cons? V6950) (cons cons (cons (shen.rcons_form (hd V6950)) (cons (shen.rcons_form (tl V6950)) ())))) (true V6950)))
+(defun shen.rcons_form (V6977) (cond ((cons? V6977) (cons cons (cons (shen.rcons_form (hd V6977)) (cons (shen.rcons_form (tl V6977)) ())))) (true V6977)))
 
-(defun shen.intern-type (V6951) (intern (cn (str V6951) "#type")))
+(defun shen.intern-type (V6978) (intern (cn (str V6978) "#type")))
 
-(defun shen.@s-macro (V6952) (cond ((and (cons? V6952) (and (= @s (hd V6952)) (and (cons? (tl V6952)) (and (cons? (tl (tl V6952))) (cons? (tl (tl (tl V6952)))))))) (cons @s (cons (hd (tl V6952)) (cons (shen.@s-macro (cons @s (tl (tl V6952)))) ())))) ((and (cons? V6952) (and (= @s (hd V6952)) (and (cons? (tl V6952)) (and (cons? (tl (tl V6952))) (and (= () (tl (tl (tl V6952)))) (string? (hd (tl V6952)))))))) (let E (explode (hd (tl V6952))) (if (> (length E) 1) (shen.@s-macro (cons @s (append E (tl (tl V6952))))) V6952))) (true V6952)))
+(defun shen.@s-macro (V6979) (cond ((and (cons? V6979) (and (= @s (hd V6979)) (and (cons? (tl V6979)) (and (cons? (tl (tl V6979))) (cons? (tl (tl (tl V6979)))))))) (cons @s (cons (hd (tl V6979)) (cons (shen.@s-macro (cons @s (tl (tl V6979)))) ())))) ((and (cons? V6979) (and (= @s (hd V6979)) (and (cons? (tl V6979)) (and (cons? (tl (tl V6979))) (and (= () (tl (tl (tl V6979)))) (string? (hd (tl V6979)))))))) (let E (explode (hd (tl V6979))) (if (> (length E) 1) (shen.@s-macro (cons @s (append E (tl (tl V6979))))) V6979))) (true V6979)))
 
-(defun shen.synonyms-macro (V6953) (cond ((and (cons? V6953) (= synonyms (hd V6953))) (shen.synonyms-h (set shen.*synonyms* (append (tl V6953) (value shen.*synonyms*))))) (true V6953)))
+(defun shen.synonyms-macro (V6980) (cond ((and (cons? V6980) (= synonyms (hd V6980))) (shen.synonyms-h (set shen.*synonyms* (append (tl V6980) (value shen.*synonyms*))))) (true V6980)))
 
-(defun shen.synonyms-h (V6954) (let CurryTypes (map (lambda X (shen.curry-type X)) V6954) (let Eval (eval (cons define (cons shen.demod (shen.compile-synonyms CurryTypes)))) synonyms)))
+(defun shen.synonyms-h (V6981) (let CurryTypes (map (lambda X (shen.curry-type X)) V6981) (let Eval (eval (cons define (cons shen.demod (shen.compile-synonyms CurryTypes)))) synonyms)))
 
-(defun shen.compile-synonyms (V6957) (cond ((= () V6957) (let X (gensym X) (cons X (cons -> (cons X ()))))) ((and (cons? V6957) (cons? (tl V6957))) (cons (shen.rcons_form (hd V6957)) (cons -> (cons (shen.rcons_form (hd (tl V6957))) (shen.compile-synonyms (tl (tl V6957))))))) (true (simple-error "synonyms requires an even number of arguments
+(defun shen.compile-synonyms (V6984) (cond ((= () V6984) (let X (gensym X) (cons X (cons -> (cons X ()))))) ((and (cons? V6984) (cons? (tl V6984))) (cons (shen.rcons_form (hd V6984)) (cons -> (cons (shen.rcons_form (hd (tl V6984))) (shen.compile-synonyms (tl (tl V6984))))))) (true (simple-error "synonyms requires an even number of arguments
 "))))
 
-(defun shen.nl-macro (V6958) (cond ((and (cons? V6958) (and (= nl (hd V6958)) (= () (tl V6958)))) (cons nl (cons 1 ()))) (true V6958)))
+(defun shen.nl-macro (V6985) (cond ((and (cons? V6985) (and (= nl (hd V6985)) (= () (tl V6985)))) (cons nl (cons 1 ()))) (true V6985)))
 
-(defun shen.assoc-macro (V6959) (cond ((and (cons? V6959) (and (cons? (tl V6959)) (and (cons? (tl (tl V6959))) (and (cons? (tl (tl (tl V6959)))) (element? (hd V6959) (cons @p (cons @v (cons append (cons and (cons or (cons + (cons * (cons do ()))))))))))))) (cons (hd V6959) (cons (hd (tl V6959)) (cons (shen.assoc-macro (cons (hd V6959) (tl (tl V6959)))) ())))) (true V6959)))
+(defun shen.assoc-macro (V6986) (cond ((and (cons? V6986) (and (cons? (tl V6986)) (and (cons? (tl (tl V6986))) (and (cons? (tl (tl (tl V6986)))) (element? (hd V6986) (cons @p (cons @v (cons append (cons and (cons or (cons + (cons * (cons do ()))))))))))))) (cons (hd V6986) (cons (hd (tl V6986)) (cons (shen.assoc-macro (cons (hd V6986) (tl (tl V6986)))) ())))) (true V6986)))
 
-(defun shen.let-macro (V6960) (cond ((and (cons? V6960) (and (= let (hd V6960)) (and (cons? (tl V6960)) (and (cons? (tl (tl V6960))) (and (cons? (tl (tl (tl V6960)))) (cons? (tl (tl (tl (tl V6960)))))))))) (cons let (cons (hd (tl V6960)) (cons (hd (tl (tl V6960))) (cons (shen.let-macro (cons let (tl (tl (tl V6960))))) ()))))) ((and (cons? V6960) (and (= let (hd V6960)) (and (cons? (tl V6960)) (and (cons? (tl (tl V6960))) (and (cons? (tl (tl (tl V6960)))) (= () (tl (tl (tl (tl V6960)))))))))) (if (variable? (hd (tl V6960))) V6960 (simple-error (shen.app (hd (tl V6960)) " is not a variable
-" shen.s)))) (true V6960)))
+(defun shen.let-macro (V6987) (cond ((and (cons? V6987) (and (= let (hd V6987)) (and (cons? (tl V6987)) (and (cons? (tl (tl V6987))) (and (cons? (tl (tl (tl V6987)))) (cons? (tl (tl (tl (tl V6987)))))))))) (cons let (cons (hd (tl V6987)) (cons (hd (tl (tl V6987))) (cons (shen.let-macro (cons let (tl (tl (tl V6987))))) ()))))) ((and (cons? V6987) (and (= let (hd V6987)) (and (cons? (tl V6987)) (and (cons? (tl (tl V6987))) (and (cons? (tl (tl (tl V6987)))) (= () (tl (tl (tl (tl V6987)))))))))) (if (variable? (hd (tl V6987))) V6987 (simple-error (shen.app (hd (tl V6987)) " is not a variable
+" shen.s)))) (true V6987)))
 
-(defun shen.abs-macro (V6961) (cond ((and (cons? V6961) (and (= /. (hd V6961)) (and (cons? (tl V6961)) (and (cons? (tl (tl V6961))) (cons? (tl (tl (tl V6961)))))))) (cons lambda (cons (hd (tl V6961)) (cons (shen.abs-macro (cons /. (tl (tl V6961)))) ())))) ((and (cons? V6961) (and (= /. (hd V6961)) (and (cons? (tl V6961)) (and (cons? (tl (tl V6961))) (= () (tl (tl (tl V6961)))))))) (if (variable? (hd (tl V6961))) (cons lambda (tl V6961)) (simple-error (shen.app (hd (tl V6961)) " is not a variable
-" shen.s)))) (true V6961)))
+(defun shen.abs-macro (V6988) (cond ((and (cons? V6988) (and (= /. (hd V6988)) (and (cons? (tl V6988)) (and (cons? (tl (tl V6988))) (cons? (tl (tl (tl V6988)))))))) (cons lambda (cons (hd (tl V6988)) (cons (shen.abs-macro (cons /. (tl (tl V6988)))) ())))) ((and (cons? V6988) (and (= /. (hd V6988)) (and (cons? (tl V6988)) (and (cons? (tl (tl V6988))) (= () (tl (tl (tl V6988)))))))) (if (variable? (hd (tl V6988))) (cons lambda (tl V6988)) (simple-error (shen.app (hd (tl V6988)) " is not a variable
+" shen.s)))) (true V6988)))
 
-(defun shen.cases-macro (V6964) (cond ((and (cons? V6964) (and (= cases (hd V6964)) (and (cons? (tl V6964)) (and (= true (hd (tl V6964))) (cons? (tl (tl V6964))))))) (hd (tl (tl V6964)))) ((and (cons? V6964) (and (= cases (hd V6964)) (and (cons? (tl V6964)) (and (cons? (tl (tl V6964))) (= () (tl (tl (tl V6964)))))))) (cons if (cons (hd (tl V6964)) (cons (hd (tl (tl V6964))) (cons (cons simple-error (cons "error: cases exhausted" ())) ()))))) ((and (cons? V6964) (and (= cases (hd V6964)) (and (cons? (tl V6964)) (cons? (tl (tl V6964)))))) (cons if (cons (hd (tl V6964)) (cons (hd (tl (tl V6964))) (cons (shen.cases-macro (cons cases (tl (tl (tl V6964))))) ()))))) ((and (cons? V6964) (and (= cases (hd V6964)) (and (cons? (tl V6964)) (= () (tl (tl V6964)))))) (simple-error "error: odd number of case elements
-")) (true V6964)))
+(defun shen.cases-macro (V6991) (cond ((and (cons? V6991) (and (= cases (hd V6991)) (and (cons? (tl V6991)) (and (= true (hd (tl V6991))) (cons? (tl (tl V6991))))))) (hd (tl (tl V6991)))) ((and (cons? V6991) (and (= cases (hd V6991)) (and (cons? (tl V6991)) (and (cons? (tl (tl V6991))) (= () (tl (tl (tl V6991)))))))) (cons if (cons (hd (tl V6991)) (cons (hd (tl (tl V6991))) (cons (cons simple-error (cons "error: cases exhausted" ())) ()))))) ((and (cons? V6991) (and (= cases (hd V6991)) (and (cons? (tl V6991)) (cons? (tl (tl V6991)))))) (cons if (cons (hd (tl V6991)) (cons (hd (tl (tl V6991))) (cons (shen.cases-macro (cons cases (tl (tl (tl V6991))))) ()))))) ((and (cons? V6991) (and (= cases (hd V6991)) (and (cons? (tl V6991)) (= () (tl (tl V6991)))))) (simple-error "error: odd number of case elements
+")) (true V6991)))
 
-(defun shen.timer-macro (V6965) (cond ((and (cons? V6965) (and (= time (hd V6965)) (and (cons? (tl V6965)) (= () (tl (tl V6965)))))) (shen.let-macro (cons let (cons Start (cons (cons get-time (cons run ())) (cons Result (cons (hd (tl V6965)) (cons Finish (cons (cons get-time (cons run ())) (cons Time (cons (cons - (cons Finish (cons Start ()))) (cons Message (cons (cons pr (cons (cons cn (cons "
+(defun shen.timer-macro (V6992) (cond ((and (cons? V6992) (and (= time (hd V6992)) (and (cons? (tl V6992)) (= () (tl (tl V6992)))))) (shen.let-macro (cons let (cons Start (cons (cons get-time (cons run ())) (cons Result (cons (hd (tl V6992)) (cons Finish (cons (cons get-time (cons run ())) (cons Time (cons (cons - (cons Finish (cons Start ()))) (cons Message (cons (cons pr (cons (cons cn (cons "
 run time: " (cons (cons cn (cons (cons str (cons Time ())) (cons " secs
-" ()))) ()))) (cons (cons stoutput ()) ()))) (cons Result ())))))))))))))) (true V6965)))
+" ()))) ()))) (cons (cons stoutput ()) ()))) (cons Result ())))))))))))))) (true V6992)))
 
-(defun shen.tuple-up (V6966) (cond ((cons? V6966) (cons @p (cons (hd V6966) (cons (shen.tuple-up (tl V6966)) ())))) (true V6966)))
+(defun shen.tuple-up (V6993) (cond ((cons? V6993) (cons @p (cons (hd V6993) (cons (shen.tuple-up (tl V6993)) ())))) (true V6993)))
 
-(defun shen.put/get-macro (V6967) (cond ((and (cons? V6967) (and (= put (hd V6967)) (and (cons? (tl V6967)) (and (cons? (tl (tl V6967))) (and (cons? (tl (tl (tl V6967)))) (= () (tl (tl (tl (tl V6967)))))))))) (cons put (cons (hd (tl V6967)) (cons (hd (tl (tl V6967))) (cons (hd (tl (tl (tl V6967)))) (cons (cons value (cons *property-vector* ())) ())))))) ((and (cons? V6967) (and (= get (hd V6967)) (and (cons? (tl V6967)) (and (cons? (tl (tl V6967))) (= () (tl (tl (tl V6967)))))))) (cons get (cons (hd (tl V6967)) (cons (hd (tl (tl V6967))) (cons (cons value (cons *property-vector* ())) ()))))) ((and (cons? V6967) (and (= unput (hd V6967)) (and (cons? (tl V6967)) (and (cons? (tl (tl V6967))) (= () (tl (tl (tl V6967)))))))) (cons unput (cons (hd (tl V6967)) (cons (hd (tl (tl V6967))) (cons (cons value (cons *property-vector* ())) ()))))) (true V6967)))
+(defun shen.put/get-macro (V6994) (cond ((and (cons? V6994) (and (= put (hd V6994)) (and (cons? (tl V6994)) (and (cons? (tl (tl V6994))) (and (cons? (tl (tl (tl V6994)))) (= () (tl (tl (tl (tl V6994)))))))))) (cons put (cons (hd (tl V6994)) (cons (hd (tl (tl V6994))) (cons (hd (tl (tl (tl V6994)))) (cons (cons value (cons *property-vector* ())) ())))))) ((and (cons? V6994) (and (= get (hd V6994)) (and (cons? (tl V6994)) (and (cons? (tl (tl V6994))) (= () (tl (tl (tl V6994)))))))) (cons get (cons (hd (tl V6994)) (cons (hd (tl (tl V6994))) (cons (cons value (cons *property-vector* ())) ()))))) ((and (cons? V6994) (and (= unput (hd V6994)) (and (cons? (tl V6994)) (and (cons? (tl (tl V6994))) (= () (tl (tl (tl V6994)))))))) (cons unput (cons (hd (tl V6994)) (cons (hd (tl (tl V6994))) (cons (cons value (cons *property-vector* ())) ()))))) (true V6994)))
 
-(defun undefmacro (V6968) (do (set *macros* (remove (assoc V6968 (value *macros*)) (value *macros*))) V6968))
+(defun undefmacro (V6995) (do (set *macros* (remove (assoc V6995 (value *macros*)) (value *macros*))) V6995))
 

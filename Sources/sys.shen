@@ -440,13 +440,7 @@
 (define package?
   null -> true
   Package -> (trap-error (do (external Package) true) (/. E false)))
-
-(define fn
-  F -> (let Assoc (assoc F (value *lambdatable*))
-            (if (empty? Assoc)
-                (error "~A has no lambda expansion~%" F)
-                (tl Assoc))))
-  
+ 
 (define fail
   -> fail!) 
             
