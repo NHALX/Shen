@@ -97,11 +97,6 @@
 
 (DEFUN trace (F) (EVAL (READ-FROM-STRING (FORMAT NIL "(TRACE ~A)" F))))
 
-(cd "StLib")
-(load "install.shen")
-(cd "")
-(tc '-)
-
 #+SBCL
 (SAVE-LISP-AND-DIE "sbcl-shen.exe" :SAVE-RUNTIME-OPTIONS T :EXECUTABLE T :TOPLEVEL 'shen.shen)
 
